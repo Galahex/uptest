@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>DLP 차단 안내</title>
+  <style>
+    /* 라이트 테마 고정 (브라우저 다크/라이트 설정과 무관하게 동일한 룩) */
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --accent:#0ea5e9;
+      --danger:#be123c;
+      --border:#e2e8f0;
+      --shadow: 0 12px 28px rgba(2,8,23,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background: var(--bg); color:var(--text);
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Pretendard,Apple SD Gothic Neo,Noto Sans KR,sans-serif;
+      display:grid; place-items:center; padding:24px;
+      /* 강제 라이트 렌더링 힌트 */
+      color-scheme: light;
+    }
+    .wrap{width:min(720px, 96vw)}
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:28px 24px;
+    }
+    .hdr{display:flex; gap:14px; align-items:center}
+    .shield{
+      width:52px; height:52px; border-radius:14px; display:grid; place-items:center;
+      background: linear-gradient(180deg, rgba(14,165,233,.15), transparent 60%), #e0f2fe;
+      color:#0369a1; box-shadow: inset 0 0 0 1px rgba(3,105,161,.15);
+    }
+    h1{font-size:22px; margin:0}
+    .subtitle{color:var(--muted); margin-top:2px}
+    .alert{
+      margin:18px 0 14px; padding:14px 16px; border-radius:12px;
+      border:1px dashed var(--danger); color:var(--danger); background:#ffe4e6;
+    }
+    .kv{
+      margin-top:8px; padding:14px 16px; border:1px solid var(--border);
+      border-radius:12px; background:#fafafa;
+    }
+    .k{color:var(--muted); font-size:.92rem; margin-bottom:6px}
+    .v{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    }
+    .badge{
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      background:#e0f2fe; color:#075985; border:1px solid #bae6fd; font-weight:600;
+    }
+    .btn{
+      appearance:none; border:1px solid var(--border); background:#fff; color:var(--text);
+      padding:8px 12px; border-radius:10px; cursor:pointer;
+    }
+    .btn:active{transform:translateY(1px)}
+    .footer{
+      display:flex; gap:10px; justify-content:flex-end; margin-top:16px
+    }
+    .contact{
+      margin-top:12px; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#fff;
+    }
+    .small{font-size:.9rem; color:var(--muted)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="title">
+    <section class="card" aria-live="polite">
+      <header class="hdr">
+        <div class="shield" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2l7 3v6c0 5-3.5 9.4-7 11-3.5-1.6-7-6-7-11V5l7-3z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 id="title">DLP 정책에 의해 차단되었습니다</h1>
+          <div class="subtitle">회사의 정보보호 정책 위반 가능성이 감지되어 요청이 중단되었습니다.</div>
+        </div>
+      </header>
+
+      <div class="alert" role="alert">
+        전송하려는 콘텐츠가 <strong>정책에 의해 제한</strong>되었습니다. 아래의 <strong>분류</strong>를 확인해 주세요.
+      </div>
+
+      <!-- 유일한 동적 항목: 분류 -->
+      <div class="kv" role="group" aria-labelledby="k-classification">
+        <div class="k" id="k-classification">분류</div>
+        <div class="v">
+          <span id="classification-badge" class="badge">Internal / Confidential</span>
+          <button id="copyBtn" class="btn" type="button" aria-label="분류 값 복사">복사</button>
+        </div>
+        <div class="small mono" id="classification-raw">Internal / Confidential</div>
+      </div>
+
+      <!-- 하단 고정 문구(정책상 동적 주입 불가하므로 상수 처리) -->
+      <div class="contact" role="contentinfo">
+        <strong>문의처</strong><br />
+        정보보호팀 (secops@example.com / 02-0000-0000)
+        <div class="small">오탐으로 판단되거나 업무 영향이 있을 경우 위 연락처로 문의해 주세요.</div>
+      </div>
+
+      <footer class="footer" role="group" aria-label="동작">
+        <button class="btn" onclick="history.back()">이전 페이지</button>
+        <button class="btn" onclick="location.reload()">다시 시도</button>
+      </footer>
+
+      <p class="small" style="margin-top:8px">
+        본 차단 페이지는 데이터 보호와 정책 준수를 위해 표시됩니다.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    // 유일한 동적 입력: URL ?classification=... (없으면 기본값 유지)
+    (function(){
+      const qs = new URLSearchParams(location.search);
+      const classification = (qs.get('classification') || 'Internal / Confidential').trim();
+
+      const badge = document.getElementById('classification-badge');
+      const raw   = document.getElementById('classification-raw');
+      badge.textContent = classification || 'Internal / Confidential';
+      raw.textContent   = classification || 'Internal / Confidential';
+
+      // 복사 버튼
+      const copyBtn = document.getElementById('copyBtn');
+      copyBtn.addEventListener('click', async () => {
+        try{
+          await navigator.clipboard.writeText(classification);
+          copyBtn.textContent = '복사됨';
+          setTimeout(()=> copyBtn.textContent='복사', 1200);
+        }catch(e){
+          alert('복사에 실패했습니다: ' + e);
+        }
+      });
+
+      // 캐시 방지(가능 시)
+      try {
+        if ('caches' in window) { caches.keys().then(keys => keys.forEach(k => caches.delete(k))); }
+      } catch(e){}
+    })();
+  </script>
+</body>
+</html>
